@@ -1,0 +1,4 @@
+create a store in a seprate file
+wrap you app with store
+create a slice
+add that slice in to app store
