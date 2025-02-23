@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { BASE_URL } from "../../utils/constant";
 import { useDispatch, useSelector } from "react-redux";
 import { addRequests } from "../../utils/requestSlice";
@@ -7,6 +7,19 @@ import axios from "axios";
 const Request = () => {
   const requests = useSelector((store) => store.requests);
   const dispatch = useDispatch();
+
+  const reviewRequest = async (status, _id) => {
+    try {
+      const res = axios.post(
+        BASE_URL + "/request/review/" + status + "/" + _id,
+        {},
+        {
+          withCredentials: true,
+        }
+      );
+      dispatch(removeRequest(_id));
+    } catch (err) {}
+  };
   const fetchRequests = async () => {
     try {
       const res = await axios.get(BASE_URL + "/user/request/recieved", {
@@ -22,7 +35,8 @@ const Request = () => {
   }, []);
 
   if (!requests) return;
-  if (requests.length == 0) return <h1>No Requests Found</h1>;
+  if (requests.length == 0)
+    return <h1 className="text-center text-3xl mt-5">No Pending Requests</h1>;
 
   return (
     <div className="text-center my-10">
@@ -52,13 +66,21 @@ const Request = () => {
               <p>Gender : {gender}</p>
               <p className="capitalize">status : {status}</p>
               <div className="my-5 ">
-              <button className="btn btn-secondary text-xl font-sans">Accept</button>
-              <button className="btn btn-accent  mx-5 text-xl font-sans">Reject</button>
+                <button
+                  className="btn btn-secondary text-xl font-sans"
+                  onClick={() => reviewRequest("accepted", requests._id)}
+                >
+                  Accept
+                </button>
+                <button
+                  className="btn btn-accent  mx-5 text-xl font-sans"
+                  onClick={() => reviewRequest("rejected", requests._id)}
+                >
+                  Reject
+                </button>
+              </div>
             </div>
-            </div>
-            
           </div>
-          
         );
       })}
     </div>
