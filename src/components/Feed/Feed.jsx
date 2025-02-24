@@ -21,12 +21,17 @@ const Feed = () => {
   useEffect(() => {
     getFeed();
   }, []);
-  return feed && (
-    <>
-      <div className="flex justify-center my-10">
-        <UserCard user={feed[0]}/>
-      </div>
-    </>
+  if (!feed) return;
+  if (feed.length <= 0) return <h1 className="text-center bg-gray-600 text-4xl py-5 text-white">(0) User's Found</h1>;
+
+  return (
+    feed && (
+      <>
+        <div className="flex justify-center my-10">
+          <UserCard user={feed[0]} />
+        </div>
+      </>
+    )
   );
 };
 
